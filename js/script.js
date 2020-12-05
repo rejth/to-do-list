@@ -2,6 +2,7 @@
 
 const todoControl = document.querySelector('.todo-control'),
       headerInputValue = document.querySelector('.header-input'),
+      createtTodoButton = document.querySelector('.header-button'),
       todoList = document.querySelector('.todo-list'),
       completedList = document.querySelector('.todo-completed');
 
@@ -11,7 +12,7 @@ const render = function() {
   todoList.textContent = '';
   completedList.textContent = '';
 
-  toDoData.forEach(function(item) {
+  toDoData.forEach(function(item, index) {
     const li = document.createElement('li');
     li.classList.add('todo-item');
 
@@ -28,8 +29,8 @@ const render = function() {
       todoList.append(li);
     }
 
-    const removeButton = li.querySelector('.todo-remove'),
-          markAsDoneButton = li.querySelector('.todo-complete');
+    const removeButton = li.querySelector('.todo-remove');
+    const markAsDoneButton = li.querySelector('.todo-complete');
 
     markAsDoneButton.addEventListener('click', function() {
       item.completed = !item.completed;
@@ -38,6 +39,7 @@ const render = function() {
 
     removeButton.addEventListener('click', function() {
       li.remove();
+      delete toDoData[index];
     });
   });
 };
@@ -45,14 +47,19 @@ const render = function() {
 todoControl.addEventListener('submit', function(e) {
   e.preventDefault();
 
-  const newToDo = {
-    value: headerInputValue.value,
-    completed: false
-  };
+  if (headerInputValue.value !== '') {
 
-  toDoData.push(newToDo);
+    const newToDo = {
+      value: headerInputValue.value,
+      completed: false
+    };
 
-  render();
+    headerInputValue.value = '';
+
+    toDoData.push(newToDo);
+
+    render();
+  }
 });
 
 render();

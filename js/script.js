@@ -2,7 +2,7 @@
 
 const todoControl = document.querySelector('.todo-control'),
       headerInputValue = document.querySelector('.header-input'),
-      createtTodoButton = document.querySelector('.header-button'),
+      createTodoButton = document.querySelector('.header-button'),
       todoList = document.querySelector('.todo-list'),
       completedList = document.querySelector('.todo-completed');
 

@@ -23,8 +23,8 @@ const render = function() {
     li.innerHTML =
       `<span class="text-todo">${item.value}</span>` +
       '<div class="todo-buttons">' +
-				'<button class="todo-remove"></button>' +
-        '<button class="todo-complete"></button>' +
+      '<button class="todo-remove"></button>' +
+      '<button class="todo-complete"></button>' +
       '</div>';
 
     if (item.completed) {

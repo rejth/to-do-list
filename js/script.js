@@ -7,6 +7,7 @@ class Todo {
     this.todoList = document.querySelector(todoList);
     this.todoCompleted = document.querySelector(todoCompleted);
     this.todoData = new Map(JSON.parse(localStorage.getItem('todoData')));
+    this.todoContainer= document.querySelector('.todo-container');
   }
 
   addTodo(e) {
@@ -31,21 +32,27 @@ class Todo {
     localStorage.setItem('todoData', JSON.stringify([...this.todoData])); // refresh localStorage item
   }
 
-  deleteTodo(item, button, todo) {
+  deleteTodo(item, todo) {
     // remove task from HTML-document and tasks list
-    button.addEventListener('click', () => {
-      todo.remove();
-      this.todoData.delete(item.key);
-      this.addDataToLocalStorage(); // refresh localStorage
-    });
+    todo.remove();
+    this.todoData.delete(item.key);
+    this.addDataToLocalStorage(); // refresh localStorage
   }
 
-  completeTodo(item, button) {
+  completeTodo(item) {
     // change task's status
-    button.addEventListener('click', () => {
-      item.completed = !item.completed;
-      this.addDataToLocalStorage(); // refresh localStorage
-      this.render();
+    item.completed = !item.completed;
+    this.addDataToLocalStorage(); // refresh localStorage
+    this.render();
+  }
+
+  handlerEvents(item, todo) {
+    this.todoContainer.addEventListener('click', (e) => {
+      if (e.target.matches('.todo-remove')) {
+        this.deleteTodo(item, todo);
+      } else if (e.target.matches('.todo-complete')) {
+        this.completeTodo(item);
+      }
     });
   }
 
@@ -74,12 +81,7 @@ class Todo {
       this.todoList.append(li); // add to to-do tasks div
     }
 
-    const removeButton = li.querySelector('.todo-remove');
-    const markAsDoneButton = li.querySelector('.todo-complete');
-
-    this.deleteTodo(item, removeButton, li); // deleteded task listener
-
-    this.completeTodo(item, markAsDoneButton); // changed task's status listener
+    this.handlerEvents(item, li);
   }
 
   generateUniqueKey() {

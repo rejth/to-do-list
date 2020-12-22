@@ -58,7 +58,6 @@ class Todo {
   }
 
   render() {
-    // this.todoData = JSON.parse(localStorage.getItem('todoData'));
     this.todoList.textContent = '';
     this.todoCompleted.textContent = '';
     this.todoData.forEach(item => this.createElement(item));

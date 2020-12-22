@@ -12,19 +12,17 @@ class Todo {
 
   addTodo(e) {
     e.preventDefault();
-
     if (this.input.value.trim()) {
       const newTodo = {
         value: this.input.value,
         completed: false,
         key: this.generateUniqueKey()
       };
-
       this.todoData.set(newTodo.key, newTodo);
-
       this.input.value = '';
-
       this.render();
+    } else {
+      alert('Нельзя добавлять пустое дело!')
     }
   }
 
@@ -32,34 +30,37 @@ class Todo {
     localStorage.setItem('todoData', JSON.stringify([...this.todoData])); // refresh localStorage item
   }
 
-  deleteTodo(item, todo) {
-    // remove task from HTML-document and tasks list
-    todo.remove();
-    this.todoData.delete(item.key);
+  deleteTodo(todo) {
+    todo.remove(); // remove task from HTML-document and tasks list
+    this.todoData.delete(todo.key);
     this.addDataToLocalStorage(); // refresh localStorage
   }
 
-  completeTodo(item) {
-    // change task's status
-    item.completed = !item.completed;
+  completeTodo(todo) {
+    this.todoData.forEach(item => {
+      if (item.key === todo.key) {
+        item.completed = !item.completed; // change task's status
+      }
+    });
     this.addDataToLocalStorage(); // refresh localStorage
     this.render();
   }
 
-  handlerEvents(item, todo) {
+  handlerEvents() {
     this.todoContainer.addEventListener('click', (e) => {
+      const todoItem = e.target.closest('.todo-item');
       if (e.target.matches('.todo-remove')) {
-        this.deleteTodo(item, todo);
+        this.deleteTodo(todoItem);
       } else if (e.target.matches('.todo-complete')) {
-        this.completeTodo(item);
+        this.completeTodo(todoItem);
       }
     });
   }
 
   render() {
+    // this.todoData = JSON.parse(localStorage.getItem('todoData'));
     this.todoList.textContent = '';
     this.todoCompleted.textContent = '';
-
     this.todoData.forEach(item => this.createElement(item));
     this.addDataToLocalStorage();
   }
@@ -68,6 +69,7 @@ class Todo {
     const li = document.createElement('li');
 
     li.classList.add('todo-item');
+    li.key = item.key;
     li.insertAdjacentHTML('beforeend',
       `<span class="text-todo">${item.value}</span>` +
       '<div class="todo-buttons">' +
@@ -80,8 +82,6 @@ class Todo {
     } else {
       this.todoList.append(li); // add to to-do tasks div
     }
-
-    this.handlerEvents(item, li);
   }
 
   generateUniqueKey() {
@@ -89,7 +89,9 @@ class Todo {
   }
 
   init() {
+    this.render();
     this.form.addEventListener('submit', this.addTodo.bind(this));
+    this.handlerEvents();
   }
 }
 

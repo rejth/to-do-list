@@ -1,3 +1,3 @@
 # to-do-list
 
-Простой to-do лист для практики JS
+Список дел на JavaScript Native
